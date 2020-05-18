@@ -1,6 +1,6 @@
 # Q
 
-![CI](https://github.com/phil-r/q/workflows/CI/badge.svg)
+[![CI](https://github.com/phil-r/q/workflows/CI/badge.svg)](https://github.com/phil-r/q/actions?query=workflow%3ACI)
 
 > Simple queue task runner written in typescript
 
