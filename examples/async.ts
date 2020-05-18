@@ -1,14 +1,13 @@
 import { queue } from 'https://raw.githubusercontent.com/phil-r/q/v0.0.1/mod.ts';
 // import { queue } from '../mod.ts';
 
-(async () => {
-  let result = 0;
-  const task = (a: number) => (result += a);
-  const q = queue(task, 2); // 2 is concurrency
+let result = 0;
+const task = (a: number) => (result += a);
+const q = queue(task, 2); // 2 is concurrency
 
-  q.push(1);
-  q.push([2, 3]);
+q.push(1);
+q.push([2, 3]);
 
-  await q.drain();
-  console.log(`Result: ${result}`);
-})();
+await q.drain();
+console.log(`Result: ${result}`); // will log `Result: 6`
+
