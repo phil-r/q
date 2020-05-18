@@ -1,4 +1,5 @@
-import { queue } from '../mod.ts';
+import { queue } from 'https://raw.githubusercontent.com/phil-r/q/v0.0.1/mod.ts';
+// import { queue } from '../mod.ts';
 
 (async () => {
   let result = 0;
