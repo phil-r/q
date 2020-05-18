@@ -1,5 +1,7 @@
 # Q
 
+![CI](https://github.com/phil-r/q/workflows/CI/badge.svg)
+
 > Simple queue task runner written in typescript
 
 ## Usage
