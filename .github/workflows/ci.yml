@@ -21,4 +21,7 @@ jobs:
     - name: Run tests
       run: |
           deno test
+          deno run examples/simple.ts
+          deno run examples/async.ts
+          deno run examples/callbacks.ts
 #          deno fmt **/*.ts --check
