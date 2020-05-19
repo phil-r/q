@@ -7,7 +7,7 @@
 ## Usage
 
 ```ts
-import { queue } from 'https://raw.githubusercontent.com/phil-r/q/v0.0.1/mod.ts';
+import { queue } from 'https://deno.land/x/q/mod.ts';
 
 let result = 0;
 const task = (a: number) => (result += a);
@@ -22,7 +22,7 @@ q.push([2, 3]);
 or using async/await
 
 ```ts
-import { queue } from 'https://raw.githubusercontent.com/phil-r/q/v0.0.1/mod.ts';
+import { queue } from 'https://deno.land/x/q/mod.ts';
 
 let result = 0;
 const task = (a: number) => (result += a);

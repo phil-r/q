@@ -1,4 +1,5 @@
-import { queue } from 'https://raw.githubusercontent.com/phil-r/q/v0.0.1/mod.ts';
+import { queue } from 'https://deno.land/x/q/mod.ts';
+// import { queue } from 'https://raw.githubusercontent.com/phil-r/q/v0.0.1/mod.ts';
 // import { queue } from '../mod.ts';
 
 let result = 0;
