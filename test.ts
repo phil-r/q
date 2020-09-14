@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertThrows,
-} from 'https://deno.land/std/testing/asserts.ts';
-import { spy, Spy } from 'https://deno.land/x/mock/spy.ts';
+} from 'https://deno.land/std@0.69.0/testing/asserts.ts';
+import { spy, Spy } from 'https://deno.land/x/mock@v0.6.1/spy.ts';
 import { queue } from './mod.ts';
 
 Deno.test('drain as callback', async function (): Promise<void> {
@@ -112,7 +112,7 @@ Deno.test(
   'works with high amount of tasks and low concurrency',
   async function (): Promise<any> {
     let result = 0;
-    const N = 100_000;
+    const N = 50_000;
     const task: Spy<void> = spy((a: number, taskId) => {
       // console.log(taskId, "started");
       return (result += a);
@@ -135,7 +135,7 @@ Deno.test(
   'works with high amount of async tasks and high concurrency',
   async function (): Promise<any> {
     let result = 0;
-    const N = 100_000;
+    const N = 50_000;
     const task: Spy<void> = spy((a: number, taskId) => {
       return new Promise((resolve) => {
         setTimeout(() => {
