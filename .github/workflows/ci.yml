@@ -13,13 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup Deno environment
-      uses: denolib/setup-deno@v1.3.0
+      uses: denolib/setup-deno@v2
       # with:
         # Version range or exact version of a Deno version to use.
         # deno-version: # optional, default is v0.x
 
     - name: Run tests
       run: |
+          deno --version
           deno test
           deno run examples/simple.ts
           deno run examples/async.ts
