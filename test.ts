@@ -13,7 +13,7 @@ Deno.test('drain as callback', async function (): Promise<void> {
     q.drain(() => {
       assertEquals(result, 6);
       assertEquals(task.calls.length, 3);
-      assertEquals(task.calls[2].args, [3]);
+      assertEquals(task.calls[2].args[0], 3);
       resolve();
     });
     q.push(1);
@@ -34,7 +34,7 @@ Deno.test('async drain', async function (): Promise<void> {
   await q.drain();
   assertEquals(result, 7);
   assertEquals(task.calls.length, 4);
-  assertEquals(task.calls[3].args, [1]);
+  assertEquals(task.calls[3].args[0], 1);
 });
 
 Deno.test('multiple drains as callback', async function (): Promise<any> {
@@ -69,9 +69,9 @@ Deno.test('onDone works', async function (): Promise<any> {
   q.push([2, 3]);
   await q.drain();
   assertEquals(done.calls.length, 3);
-  assertEquals(done.calls[0].args, [1, 1]);
-  assertEquals(done.calls[1].args, [2, 3]);
-  assertEquals(done.calls[2].args, [3, 6]);
+  assertEquals(done.calls[0].args.slice(0, 2), [1, 1]);
+  assertEquals(done.calls[1].args.slice(0, 2), [2, 3]);
+  assertEquals(done.calls[2].args.slice(0, 2), [3, 6]);
 });
 
 Deno.test('onError works', async function (): Promise<any> {
@@ -112,9 +112,15 @@ Deno.test(
   'works with high amount of tasks and low concurrency',
   async function (): Promise<any> {
     let result = 0;
-    const N = 100000;
-    const task: Spy<void> = spy((a: number) => (result += a));
+    const N = 100_000;
+    const task: Spy<void> = spy((a: number, taskId) => {
+      // console.log(taskId, "started");
+      return (result += a);
+    });
     const q = queue(task, 1);
+    // q.onDone((task, result, taskIndex) => {
+    //   console.log(`task ${task}(${taskIndex}) ended with result ${result}`);
+    // });
     const jobs = new Array(N + 1)
       .join(',')
       .split('')
@@ -129,16 +135,20 @@ Deno.test(
   'works with high amount of async tasks and high concurrency',
   async function (): Promise<any> {
     let result = 0;
-    const N = 100000;
-    const task: Spy<void> = spy((a: number) => {
+    const N = 100_000;
+    const task: Spy<void> = spy((a: number, taskId) => {
       return new Promise((resolve) => {
         setTimeout(() => {
+          // console.log(taskId, "started");
           result += a;
-          resolve();
+          resolve(result);
         }, 5);
       });
     });
     const q = queue(task, 1000);
+    // q.onDone((task, result, taskIndex) => {
+    //   console.log(`task ${task}(${taskIndex}) ended with result ${result}`);
+    // });
     const jobs = new Array(N + 1)
       .join(',')
       .split('')

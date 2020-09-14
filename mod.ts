@@ -1,4 +1,7 @@
-export function queue<T, R>(runner: (task: T) => R, concurrency: number) {
+export function queue<T, R>(
+  runner: (task: T, taskIndex?: number) => R,
+  concurrency: number
+) {
   if (concurrency <= 0) {
     throw new RangeError('concurrency can only be a positive integer');
   }
@@ -7,9 +10,10 @@ export function queue<T, R>(runner: (task: T) => R, concurrency: number) {
   }
   const tasks: T[] = [];
   let running = 0;
+  let taskCounter = 0;
   let drains: (() => any)[] = [];
-  let onError: (task: T, error: Error) => any = () => {};
-  let onDone: (task: T, result: R) => any = () => {};
+  let onError: (task: T, error: Error, taskIndex?: number) => any = () => {};
+  let onDone: (task: T, result: R, taskIndex?: number) => any = () => {};
   let drainAwaiters: any[] = [];
 
   function drained() {
@@ -22,13 +26,15 @@ export function queue<T, R>(runner: (task: T) => R, concurrency: number) {
   async function runNext() {
     if (running < concurrency && tasks.length > 0) {
       running++;
+      taskCounter++;
+      const taskIndex = taskCounter - 1;
       const task = tasks.shift();
       if (task) {
         try {
-          const result = await runner(task);
-          onDone(task, result);
+          const result = await runner(task, taskIndex);
+          onDone(task, result, taskIndex);
         } catch (err) {
-          onError(task, err);
+          onError(task, err, taskIndex);
         }
       }
       running--;
@@ -64,7 +70,9 @@ export function queue<T, R>(runner: (task: T) => R, concurrency: number) {
         return Promise.resolve();
       }
     },
-    onError: (fn: (task: T, error: Error) => any) => (onError = fn),
-    onDone: (fn: (task: T, result: R) => any) => (onDone = fn),
+    onError: (fn: (task: T, error: Error, taskIndex?: number) => any) =>
+      (onError = fn),
+    onDone: (fn: (task: T, result: R, taskIndex?: number) => any) =>
+      (onDone = fn),
   };
 }
